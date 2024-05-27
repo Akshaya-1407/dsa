@@ -1,0 +1,65 @@
+vector<int> shortestPath(int n, int m, vector<vector<int>>& edges) {
+        // Code here
+        unordered_map<int,vector<pair<int,int>>> adj;
+        
+        for(auto &vec : edges){
+            int u = vec[0];
+            int v = vec[1];
+            int w = vec[2];
+            
+            adj[u].push_back({v,w});
+            adj[v].push_back({u,w});
+            
+            
+        }
+        
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+        
+        vector<int> res(n+1,INT_MAX);
+        vector<int> parent(n+1);
+        
+        for(int i = 1 ; i <= n ; i++){
+            parent[i] = i;
+        }
+        
+        res[1] = 0;
+        
+        pq.push({0,1});
+        
+        while(!pq.empty()){
+            int d = pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+            
+            for(auto &it : adj[node]){
+                int adjnode = it.first;
+                int dist = it.second;
+                
+                if(d + dist < res[adjnode]){
+                    res[adjnode] = d + dist;
+                    pq.push({d+dist,adjnode});
+                    parent[adjnode] = node;
+                }
+            }
+        }
+        
+        int destnode = n;
+        
+        if(res[destnode] == INT_MAX){
+            return {-1};
+        }
+        
+        vector<int>path;
+        
+        while(parent[destnode] != destnode){
+            path.push_back(destnode);
+            destnode = parent[destnode];
+        }
+        path.push_back(1);
+        int wt = res[n];
+        path.push_back(wt);
+        
+        reverse(begin(path),end(path));
+        
+        return path;
+    }
