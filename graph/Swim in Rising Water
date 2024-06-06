@@ -1,0 +1,45 @@
+class Solution {
+public:
+    typedef pair<int,pair<int,int>> p;
+
+    int swimInWater(vector<vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        priority_queue<p,vector<p>,greater<p>> pq;
+        vector<vector<int>>copy(m,vector<int>(n,1e9));
+
+        copy[0][0] = grid[0][0];
+
+        pq.push({grid[0][0],{0,0}});
+
+        int dr[] = {-1, 0, 1, 0};
+        int dc[] = {0, 1, 0, -1};
+
+        while(!pq.empty()){
+            int val = pq.top().first;
+            auto node = pq.top().second;
+            pq.pop();
+            int r = node.first;
+            int c = node.second;
+
+            for(int i = 0 ; i < 4; i++){
+                int nr = r + dr[i];
+                int nc = c + dc[i];
+
+                if(nr >= 0 && nr < m && nc >= 0 && nc < n && grid[nr][nc] < copy[nr][nc]){
+                    if(val < grid[nr][nc]){
+                        copy[nr][nc] = grid[nr][nc];
+                        pq.push({copy[nr][nc],{nr,nc}});
+                    }
+                    else if(val < copy[nr][nc]){
+                        copy[nr][nc] = val;
+                        pq.push({copy[nr][nc],{nr,nc}});
+                    }
+                }
+            }
+
+            
+        }
+        return copy[m-1][n-1];
+    }
+};
