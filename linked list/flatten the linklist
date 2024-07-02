@@ -1,0 +1,36 @@
+Node *merge(Node *root,Node *merger){
+    Node *dummy = new Node(-1);
+    Node *list1 = root;
+    Node *list2 = merger;
+    Node *res = dummy;
+    
+    while(list1 != NULL && list2 != NULL){
+        if(list1->data < list2->data){
+            res->bottom = list1;
+            res = list1;
+            list1 = list1->bottom;
+        }
+        else{
+            res->bottom = list2;
+            res = list2;
+            list2 = list2->bottom;
+        }
+    }
+    if(list1){
+        res->bottom = list1;
+    }
+    else{
+        res->bottom = list2;
+    }
+    
+    return dummy->bottom;
+}
+Node *flatten(Node *root) {
+    // Your code here
+    if(root == NULL || root->next == NULL){
+        return root;
+    }
+    
+    Node* mergeHead = flatten(root->next);
+    return merge(root,mergeHead);
+}
