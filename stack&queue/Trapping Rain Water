@@ -1,0 +1,38 @@
+class Solution {
+public:
+    vector<int> LEFT(vector<int>& height){
+        int n = height.size();
+        vector<int> ans;
+        ans.push_back(height[0]);
+        for(int i = 1 ; i < n ; i++){
+            ans.push_back(max(ans[i-1],height[i]));
+        }
+        return ans;
+    }
+
+    vector<int> RIGHT(vector<int>& height){
+        int n = height.size();
+        vector<int> ans;
+        ans.push_back(height[n-1]);
+        for(int i = n-2 ; i >=0 ; i--){
+            ans.push_back(max(ans[n-i-2],height[i]));
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+    int trap(vector<int>& height) {
+        int n = height.size();
+        vector<int> left = LEFT(height);
+        vector<int> right = RIGHT(height);
+        vector<int> water(n);
+        int sum = 0;
+        for(int i = 0 ; i < n ; i++){
+            water[i] = min(left[i],right[i]) - height[i];
+            sum += water[i];
+        }
+
+        return sum;
+
+    }
+    
+};
